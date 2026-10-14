@@ -1,0 +1,6 @@
+{
+  "name": "The Second Story",
+  "description": "Every waste has a worth. Converting discarded materials into handcrafted products, conducting sustainability workshops, and organizing educational eco-tours.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

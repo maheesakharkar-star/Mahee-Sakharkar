@@ -283,7 +283,9 @@ export default function ImpactView() {
         <div className="aspect-video lg:aspect-auto lg:h-full bg-zinc-200">
           <img
             src="/src/assets/images/craft_denim_saree_tote_1791988805890.jpg"
-            alt="Denim transformation journey"
+            alt="Handcrafted tote bag made from reclaimed denim jeans and vintage silk saree patchwork"
+            loading="lazy"
+            decoding="async"
             className="h-full w-full object-cover"
             referrerPolicy="no-referrer"
           />

@@ -194,7 +194,9 @@ export default function CartDrawer({
                                 <div className="h-16 w-16 rounded-lg overflow-hidden bg-zinc-100 shrink-0">
                                   <img 
                                     src={item.product.image} 
-                                    alt={item.product.name} 
+                                    alt={item.product.imageAlt || item.product.name} 
+                                    loading="lazy"
+                                    decoding="async"
                                     className="h-full w-full object-cover"
                                     referrerPolicy="no-referrer"
                                   />

@@ -36,7 +36,9 @@ export function updatePageSeo(path: string, customInfo?: Partial<PageSeoInfo>) {
   setMetaTag('meta[name="description"]', 'name', 'description', seoConfig.metaDescription);
 
   // Meta Keywords: Main keyword + 2 related keywords
-  const allKeywords = [seoConfig.mainKeyword, ...seoConfig.relatedKeywords].join(', ');
+  const allKeywords = [seoConfig.mainKeyword, ...(Array.isArray(seoConfig.relatedKeywords) ? seoConfig.relatedKeywords : [])]
+    .filter(Boolean)
+    .join(', ');
   setMetaTag('meta[name="keywords"]', 'name', 'keywords', allKeywords);
 
   // OpenGraph Tags

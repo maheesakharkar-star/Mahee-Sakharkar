@@ -51,7 +51,22 @@ export default function BlogView({ initialArticleSlug, navigate }: BlogViewProps
     let loadedBlogs = blogPostsData;
     if (savedBlogs) {
       try {
-        loadedBlogs = JSON.parse(savedBlogs);
+        const parsed = JSON.parse(savedBlogs);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          loadedBlogs = parsed.map((item: any) => {
+            const defaultItem = blogPostsData.find((b) => b.id === item.id);
+            return {
+              ...defaultItem,
+              ...item,
+              slug: item.slug || defaultItem?.slug || item.id || 'article',
+              mainKeyword: item.mainKeyword || defaultItem?.mainKeyword || 'sustainable upcycling',
+              relatedKeywords: item.relatedKeywords || defaultItem?.relatedKeywords || ['eco living', 'circular craft'],
+              aeoQuestions: item.aeoQuestions || defaultItem?.aeoQuestions || [],
+              likes: typeof item.likes === 'number' ? item.likes : defaultItem?.likes || 0,
+              comments: Array.isArray(item.comments) ? item.comments : defaultItem?.comments || []
+            };
+          });
+        }
       } catch (err) {
         console.error('Error parsing blogs storage:', err);
       }
@@ -64,7 +79,7 @@ export default function BlogView({ initialArticleSlug, navigate }: BlogViewProps
       );
       if (found) {
         setSelectedPost(found);
-        updatePageSeo(`/blog/${found.slug}`);
+        updatePageSeo(`/blog/${found.slug || found.id}`);
       }
     } else {
       setSelectedPost(null);
@@ -164,7 +179,8 @@ export default function BlogView({ initialArticleSlug, navigate }: BlogViewProps
   };
 
   // Helper to render markdown content with semantic <h2> for AEO
-  const renderFormattedArticle = (content: string) => {
+  const renderFormattedArticle = (content?: string) => {
+    if (!content || typeof content !== 'string') return null;
     const lines = content.split('\n');
     const elements: ReactNode[] = [];
     let currentParagraph: string[] = [];
@@ -347,11 +363,13 @@ export default function BlogView({ initialArticleSlug, navigate }: BlogViewProps
                         </p>
 
                         {/* SEO Keyword tags indicator */}
-                        <div className="pt-2 flex flex-wrap gap-1.5 text-[10px] font-mono text-earth-slate/80">
-                          <span className="bg-[#FCFAF7] border border-[#E8E2D9] px-2 py-0.5 rounded">
-                            #{post.mainKeyword.replace(/\s+/g, '-')}
-                          </span>
-                        </div>
+                        {post.mainKeyword ? (
+                          <div className="pt-2 flex flex-wrap gap-1.5 text-[10px] font-mono text-earth-slate/80">
+                            <span className="bg-[#FCFAF7] border border-[#E8E2D9] px-2 py-0.5 rounded">
+                              #{post.mainKeyword.replace(/\s+/g, '-')}
+                            </span>
+                          </div>
+                        ) : null}
                       </div>
                     </div>
 
@@ -465,9 +483,9 @@ export default function BlogView({ initialArticleSlug, navigate }: BlogViewProps
 
                   <div className="flex items-center gap-2.5 text-xs text-earth-slate border-b border-[#F2ECE4] pb-4">
                     <div className="h-7 w-7 rounded-full bg-forest text-white font-display font-bold flex items-center justify-center text-[10px]">
-                      {selectedPost.author.charAt(0)}
+                      {selectedPost.author ? selectedPost.author.charAt(0) : 'A'}
                     </div>
-                    <span>Published by: <strong className="text-earth-dark">{selectedPost.author}</strong></span>
+                    <span>Published by: <strong className="text-earth-dark">{selectedPost.author || 'The Second Story Team'}</strong></span>
                   </div>
                 </div>
 
@@ -480,15 +498,15 @@ export default function BlogView({ initialArticleSlug, navigate }: BlogViewProps
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs pt-1">
                     <div className="bg-white p-2.5 rounded-xl border border-forest/20">
                       <span className="block text-[10px] font-mono text-earth-slate uppercase">Main Keyword</span>
-                      <strong className="text-earth-dark text-xs">{selectedPost.mainKeyword}</strong>
+                      <strong className="text-earth-dark text-xs">{selectedPost.mainKeyword || 'sustainable upcycling'}</strong>
                     </div>
                     <div className="bg-white p-2.5 rounded-xl border border-forest/20">
                       <span className="block text-[10px] font-mono text-earth-slate uppercase">Related Keyword 1</span>
-                      <span className="text-earth-dark font-medium text-xs">{selectedPost.relatedKeywords[0]}</span>
+                      <span className="text-earth-dark font-medium text-xs">{(selectedPost.relatedKeywords && selectedPost.relatedKeywords[0]) || 'eco crafts'}</span>
                     </div>
                     <div className="bg-white p-2.5 rounded-xl border border-forest/20">
                       <span className="block text-[10px] font-mono text-earth-slate uppercase">Related Keyword 2</span>
-                      <span className="text-earth-dark font-medium text-xs">{selectedPost.relatedKeywords[1]}</span>
+                      <span className="text-earth-dark font-medium text-xs">{(selectedPost.relatedKeywords && selectedPost.relatedKeywords[1]) || 'zero waste living'}</span>
                     </div>
                   </div>
                 </div>

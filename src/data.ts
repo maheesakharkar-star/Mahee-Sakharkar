@@ -53,7 +53,7 @@ export const productsData: Product[] = [
     category: 'corporate',
     description: 'An elegant premium corporate gifting set made of 100% recycled industrial paper with plantable marigold seed embedded covers.',
     price: 499,
-    image: 'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&q=70&w=600',
+    image: 'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&q=65&w=500',
     imageAlt: 'Handmade recycled paper notebook set with plantable seed cover and natural fiber binding',
     originalMaterial: 'Tetra-Paks & Carton Shreds',
     artisanGroup: 'Handloom Paper Collective, Saharanpur',
@@ -113,7 +113,7 @@ export const productsData: Product[] = [
     category: 'custom',
     description: 'Exquisite wooden picture frames recovered from demolition timber, wrapped neatly in vibrant silk saree borders.',
     price: 749,
-    image: 'https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&q=70&w=600',
+    image: 'https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&q=65&w=500',
     imageAlt: 'Handmade reclaimed pallet wood photo frame wrapped in colorful vintage Banarasi saree border',
     originalMaterial: 'Industrial Wood Pallets & Pre-loved Silk Sarees',
     artisanGroup: 'Weaving Families of Varanasi Collective',
@@ -133,7 +133,7 @@ export const productsData: Product[] = [
     category: 'festival',
     description: 'A deluxe festive gifting hamper composed of plantable green products, handmade sweets wrapping, and dry seed crackers.',
     price: 1899,
-    image: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&q=70&w=600',
+    image: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&q=65&w=500',
     imageAlt: 'Sustainable festive gift box with plantable seed stationery, soy candles, and bamboo chest',
     originalMaterial: 'Discarded Wood Shavings & Organic Cotton Scrap',
     artisanGroup: 'Multi-Community Women Self-Employment Initiative',
@@ -167,7 +167,7 @@ export const workshopsData: Workshop[] = [
     ],
     maxSeats: 15,
     seatsBooked: 9,
-    image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=70&w=600',
+    image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=65&w=500',
     imageAlt: 'Hands-on artisan workshop participant painting upcycled glass bottles with eco-friendly pigments'
   },
   {
@@ -188,7 +188,7 @@ export const workshopsData: Workshop[] = [
     ],
     maxSeats: 20,
     seatsBooked: 16,
-    image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=70&w=600',
+    image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=65&w=500',
     imageAlt: 'Artisan demonstrating natural botanical dye extraction from crushed temple marigold flowers'
   },
   {
@@ -209,7 +209,7 @@ export const workshopsData: Workshop[] = [
     ],
     maxSeats: 12,
     seatsBooked: 4,
-    image: 'https://images.unsplash.com/photo-1506806732259-39c2d0268443?auto=format&fit=crop&q=70&w=600',
+    image: 'https://images.unsplash.com/photo-1506806732259-39c2d0268443?auto=format&fit=crop&q=65&w=500',
     imageAlt: 'Hand block printing with wooden stamps on vintage silk saree fabrics during sustainable workshop'
   }
 ];
@@ -223,7 +223,7 @@ export const toursData: Tour[] = [
     price: 1850,
     date: '2026-06-13',
     location: 'Starts at Center Point Bus Terminal, routes to Shaktipuri Rural Craft cluster',
-    image: 'https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&q=70&w=600',
+    image: 'https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&q=65&w=500',
     imageAlt: 'Rural craft cooperative village path surrounded by organic trees where artisans weave upcycled goods',
     description: 'A deep-dive educational journey to our partnering artisanal village. See how shredded fabrics and scrap glass items are organized, sorted and crafted by women collectives.',
     itinerary: [
@@ -249,7 +249,7 @@ export const toursData: Tour[] = [
     price: 950,
     date: '2026-06-24',
     location: 'District Green Eco-Industrial Yard, Block C',
-    image: 'https://images.unsplash.com/photo-1532187640605-a25927110900?auto=format&fit=crop&q=70&w=600',
+    image: 'https://images.unsplash.com/photo-1532187640605-a25927110900?auto=format&fit=crop&q=65&w=500',
     imageAlt: 'Industrial circular recycling facility with safe sorting belts and modern mechanical scrap shredders',
     description: 'Witness the magnificent mechanical processes converting mountains of post-consumer plastics, cartons, and metals into raw sheets and functional industrial tiles.',
     itinerary: [
@@ -276,7 +276,7 @@ export const blogPostsData: BlogPost[] = [
     summary: 'Ditching single-use plastics does not need to be stressful. Learn how simple substitutions with glass jars, beeswax wraps, and compost tins make a massive difference.',
     mainKeyword: 'zero-waste kitchen transition steps',
     relatedKeywords: ['reusable glass pantry storage', 'household plastic waste reduction'],
-    image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=70&w=600',
+    image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=65&w=500',
     imageAlt: 'Organized eco-friendly kitchen pantry with labeled reusable glass jars holding grains and spices',
     aeoQuestions: [
       {
@@ -322,7 +322,7 @@ By implementing just two of these shifts, you prevent over 50 kilograms of waste
     summary: 'Do not bin those milk or juice cartons! Grab some hemp rope, scissors, and biodegradable adhesives to build delightful, customized planting pots.',
     mainKeyword: 'diy tetra pak succulent planter',
     relatedKeywords: ['upcycled juice carton craft', 'biodegradable hemp rope planting pot'],
-    image: 'https://images.unsplash.com/photo-1502489597346-dad15683d4c2?auto=format&fit=crop&q=70&w=600',
+    image: 'https://images.unsplash.com/photo-1502489597346-dad15683d4c2?auto=format&fit=crop&q=65&w=500',
     imageAlt: 'Upcycled beverage carton converted into a rustic hemp-wrapped indoor succulent planter pot',
     aeoQuestions: [
       {
@@ -374,7 +374,7 @@ It is simple, cute, reduces waste, and makes a beautiful customized present for 
     summary: 'A look inside the Shaktipuri Rural craft cooperative, where traditional embroidery is blended with modern denim salvage techniques.',
     mainKeyword: 'empowering women through upcycling crafts',
     relatedKeywords: ['fair-wage artisan craft collective', 'denim salvage rural livelihoods'],
-    image: 'https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&q=70&w=600',
+    image: 'https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&q=65&w=500',
     imageAlt: 'Rural Indian women artisans collaborating at a wooden loom tailoring upcycled denim and saree fabrics',
     aeoQuestions: [
       {

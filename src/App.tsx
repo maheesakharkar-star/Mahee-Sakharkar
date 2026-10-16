@@ -243,13 +243,13 @@ export default function App() {
                 <div className="bg-[#29211C] p-3 rounded-xl border border-[#3E332C] space-y-1">
                   <span className="text-[10px] uppercase font-mono text-amber-300 font-bold block">Target Keywords (Main + 2 Related)</span>
                   <p className="text-white font-medium text-[11px]">
-                    <span className="text-ochre">1. Main:</span> {currentSeo.mainKeyword}
+                    <span className="text-ochre">1. Main:</span> {currentSeo.mainKeyword || 'Sustainable Upcycling'}
                   </p>
                   <p className="text-[#BDB5AC] text-[11px]">
-                    <span className="text-emerald-400">2. Related:</span> {currentSeo.relatedKeywords[0]}
+                    <span className="text-emerald-400">2. Related:</span> {currentSeo.relatedKeywords?.[0] || 'Eco Crafts'}
                   </p>
                   <p className="text-[#BDB5AC] text-[11px]">
-                    <span className="text-emerald-400">3. Related:</span> {currentSeo.relatedKeywords[1]}
+                    <span className="text-emerald-400">3. Related:</span> {currentSeo.relatedKeywords?.[1] || 'Zero Waste Living'}
                   </p>
                 </div>
               </div>

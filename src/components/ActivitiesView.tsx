@@ -266,7 +266,7 @@ export default function ActivitiesView({
                       <div className="p-5 space-y-4">
                         <div className="space-y-1">
                           <span className="font-mono text-[9px] font-extrabold tracking-widest text-[#A25E1A] uppercase">
-                            Facilitated by: {workshop.facilitator.split(' ')[0]}
+                            Facilitated by: {workshop.facilitator ? workshop.facilitator.split(' ')[0] : 'Artisan'}
                           </span>
                           <h4 className="font-display font-bold text-base text-earth-dark group-hover:text-forest transition-colors leading-snug">
                             {workshop.title}
@@ -349,7 +349,7 @@ export default function ActivitiesView({
                         </div>
                         <div className="flex items-center gap-1.5 text-[#EBE6E0]">
                           <MapPin className="h-4 w-4 text-forest" />
-                          <span>{tour.location.split(',')[0]}</span>
+                          <span>{tour.location ? tour.location.split(',')[0] : 'Location'}</span>
                         </div>
                       </div>
                     </div>
@@ -379,7 +379,9 @@ export default function ActivitiesView({
                         <span className="font-display text-xs font-bold text-earth-dark uppercase tracking-wider block">Hourly Itinerary Schedule:</span>
                         <div className="space-y-3">
                           {tour.itinerary.map((it, itIdx) => {
-                            const [time, desc] = it.split(' - ');
+                            const parts = (it || '').split(' - ');
+                            const time = parts[0] || '';
+                            const desc = parts.slice(1).join(' - ') || parts[0] || '';
                             return (
                               <div key={itIdx} className="flex items-start gap-3.5 text-xs">
                                 <span className="font-mono font-bold text-[#A25E1A] bg-ochre/10 rounded px-2 py-0.5 whitespace-nowrap">{time}</span>

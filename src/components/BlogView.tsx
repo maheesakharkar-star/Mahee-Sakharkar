@@ -363,7 +363,7 @@ export default function BlogView({ initialArticleSlug, navigate }: BlogViewProps
                         </p>
 
                         {/* SEO Keyword tags indicator */}
-                        {post.mainKeyword ? (
+                        {post?.mainKeyword && typeof post.mainKeyword === 'string' ? (
                           <div className="pt-2 flex flex-wrap gap-1.5 text-[10px] font-mono text-earth-slate/80">
                             <span className="bg-[#FCFAF7] border border-[#E8E2D9] px-2 py-0.5 rounded">
                               #{post.mainKeyword.replace(/\s+/g, '-')}

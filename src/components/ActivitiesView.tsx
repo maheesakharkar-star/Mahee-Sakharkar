@@ -5,7 +5,7 @@
 
 import { useState, useEffect, FormEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Calendar, Users, MapPin, Clock, Check, Sparkles, AlertCircle, BookmarkCheck, ArrowRight, X, Heart, ShieldAlert, ChevronDown, Award } from 'lucide-react';
+import { Calendar, Users, MapPin, Clock, Check, Sparkles, AlertCircle, BookmarkCheck, ArrowRight, X, Heart, ShieldAlert, ChevronDown, Award, HelpCircle } from 'lucide-react';
 import { Workshop, Tour, WorkshopRegistration, TourBooking } from '../types';
 
 interface ActivitiesViewProps {
@@ -249,12 +249,13 @@ export default function ActivitiesView({
                       <div className="relative aspect-[4/3] w-full bg-[#F3EDE3] overflow-hidden">
                         <img
                           src={workshop.image}
-                          alt={workshop.title}
+                          alt={workshop.imageAlt || workshop.title}
+                          loading="lazy"
+                          decoding="async"
                           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-102"
-                          referrerPolicy="no-referrer"
                         />
                         <span className="absolute top-3 left-3 rounded-full bg-forest px-3 py-1 font-display text-[11px] font-bold text-white shadow-sm">
-                          ${workshop.price}
+                          ₹{workshop.price.toLocaleString('en-IN')}
                         </span>
                         <span className="absolute bottom-3 left-3 rounded-full bg-white/95 px-2.5 py-0.5 text-[9px] font-mono font-bold text-earth-dark shadow-sm">
                           {workshop.duration}
@@ -333,12 +334,13 @@ export default function ActivitiesView({
                     <div className="relative aspect-video w-full bg-[#F3EDE3] overflow-hidden">
                       <img
                         src={tour.image}
-                        alt={tour.title}
+                        alt={tour.imageAlt || tour.title}
+                        loading="lazy"
+                        decoding="async"
                         className="h-full w-full object-cover"
-                        referrerPolicy="no-referrer"
                       />
                       <span className="absolute top-4 left-4 rounded-full bg-ochre px-3.5 py-1.5 font-display text-sm font-bold text-white shadow-md">
-                        ${tour.price} <span className="text-xs font-normal">/ Person</span>
+                        ₹{tour.price.toLocaleString('en-IN')} <span className="text-xs font-normal">/ Person</span>
                       </span>
                       <div className="absolute bottom-4 left-4 right-4 rounded-xl bg-earth-dark/80 backdrop-blur-sm p-3 text-white border border-white/10 flex flex-wrap gap-x-6 gap-y-1 text-xs">
                         <div className="flex items-center gap-1.5 text-[#EBE6E0]">
@@ -487,8 +489,8 @@ export default function ActivitiesView({
                   <div>
                     <label className="block text-[10px] font-bold text-earth-slate uppercase tracking-wider mb-1">Ticket Price Calculation:</label>
                     <div className="p-3 bg-[#FCFAF7] border border-[#E8E2D9] rounded-xl flex justify-between text-xs font-semibold">
-                      <span>{wQty} Tickets × ${selectedWorkshop.price}</span>
-                      <span className="text-forest text-sm font-bold">${wQty * selectedWorkshop.price}</span>
+                      <span>{wQty} Tickets × ₹{selectedWorkshop.price.toLocaleString('en-IN')}</span>
+                      <span className="text-forest text-sm font-bold">₹{(wQty * selectedWorkshop.price).toLocaleString('en-IN')}</span>
                     </div>
                   </div>
 
@@ -613,8 +615,8 @@ export default function ActivitiesView({
                   <div>
                     <label className="block text-[10px] font-bold text-earth-slate uppercase tracking-wider mb-1">Estimated Total Price:</label>
                     <div className="p-3 bg-[#FCFAF7] border border-[#E8E2D9] rounded-xl flex justify-between text-xs font-semibold">
-                      <span>{tSize} Persons × ${selectedTour.price}</span>
-                      <span className="text-ochre text-sm font-bold">${tSize * selectedTour.price}</span>
+                      <span>{tSize} Persons × ₹{selectedTour.price.toLocaleString('en-IN')}</span>
+                      <span className="text-ochre text-sm font-bold">₹{(tSize * selectedTour.price).toLocaleString('en-IN')}</span>
                     </div>
                   </div>
 
@@ -655,6 +657,33 @@ export default function ActivitiesView({
           </div>
         )}
       </AnimatePresence>
+
+      {/* AEO Activities & Eco Tours Knowledge Section */}
+      <section id="activities-aeo-knowledge" className="rounded-3xl border border-[#CC7722]/20 bg-white p-6 sm:p-10 shadow-sm space-y-6">
+        <div className="flex items-center gap-2 text-xs font-semibold text-ochre uppercase tracking-wider">
+          <HelpCircle className="h-4 w-4" />
+          <span>AEO Practical Immersion & Workshop Query Center</span>
+        </div>
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <h2 className="font-display text-xl sm:text-2xl font-bold text-earth-dark tracking-tight leading-snug">
+              What Will Participants Learn in a Second Story Sustainability Workshop?
+            </h2>
+            <p className="text-sm text-earth-slate leading-relaxed font-sans">
+              Participants learn hands-on circular economy skills, including natural plant extraction for herbal dyes, upcycled fabric quilting, and diamond-wheel glass bottle scoring. All raw materials and protective safety gear are provided, and attendees bring home their own finished upcycled creation along with reusable recipes and workshop notes to continue crafting sustainably at home.
+            </p>
+          </div>
+
+          <div className="space-y-2 pt-4 border-t border-[#E8E2D9]">
+            <h2 className="font-display text-xl sm:text-2xl font-bold text-earth-dark tracking-tight leading-snug">
+              Who Can Attend the Weekend Sustainability Eco Tours?
+            </h2>
+            <p className="text-sm text-earth-slate leading-relaxed font-sans">
+              Our eco tours are designed for students, families, educators, and conscious travelers looking to understand real-world waste management. Tours visit municipal recycling hubs, sorting facilities, and rural artisan clusters to observe the end-to-end journey from waste heap to retail gallery, accompanied by organic village lunches and direct conversations with craftswomen.
+            </p>
+          </div>
+        </div>
+      </section>
 
     </div>
   );

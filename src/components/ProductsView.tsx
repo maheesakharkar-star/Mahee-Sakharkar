@@ -18,7 +18,8 @@ import {
   Tag, 
   Users, 
   Scale, 
-  Calculator 
+  Calculator,
+  HelpCircle
 } from 'lucide-react';
 import { Product } from '../types';
 
@@ -200,13 +201,14 @@ export default function ProductsView({
                   <div className="relative aspect-[4/3] w-full bg-[#F3EDE3] overflow-hidden border-b border-[#E8E2D9]">
                     <img
                       src={product.image}
-                      alt={product.name}
+                      alt={product.imageAlt || product.name}
+                      loading="lazy"
+                      decoding="async"
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      referrerPolicy="no-referrer"
                     />
                     
                     <div className="absolute top-3 right-3 bg-white/95 px-2.5 py-1 rounded text-xs font-bold font-mono text-earth-dark border border-[#E8E2D9] tabular-nums">
-                      ${product.price}
+                      ₹{product.price.toLocaleString('en-IN')}
                     </div>
                   </div>
 
@@ -390,6 +392,33 @@ export default function ProductsView({
         </div>
       </section>
 
+      {/* AEO Product Knowledge Section */}
+      <section id="products-aeo-knowledge" className="rounded-3xl border border-[#CC7722]/20 bg-white p-6 sm:p-10 shadow-sm space-y-6">
+        <div className="flex items-center gap-2 text-xs font-semibold text-ochre uppercase tracking-wider">
+          <HelpCircle className="h-4 w-4" />
+          <span>AEO Product Knowledge & Material Circularity</span>
+        </div>
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <h2 className="font-display text-xl sm:text-2xl font-bold text-earth-dark tracking-tight leading-snug">
+              What Types of Discarded Materials Are Used in The Second Story Products?
+            </h2>
+            <p className="text-sm text-earth-slate leading-relaxed font-sans">
+              Our artisan collections utilize discarded glass bottles, temple waste coconut shells, reclaimed post-consumer denim, industrial tetra-paks, and festive floral temple waste. Each material is sanitized, structurally reinforced, and transformed into functional home decor, stationery, and lifestyle accessories. By working directly with municipal collectors and rural scrap cooperatives, we keep non-biodegradable solids from ending up in incineration pits.
+            </p>
+          </div>
+
+          <div className="space-y-2 pt-4 border-t border-[#E8E2D9]">
+            <h2 className="font-display text-xl sm:text-2xl font-bold text-earth-dark tracking-tight leading-snug">
+              Can Corporate Organizations Order Customized Eco-Friendly Gifting Sets?
+            </h2>
+            <p className="text-sm text-earth-slate leading-relaxed font-sans">
+              Yes, The Second Story offers bespoke corporate gifting solutions featuring customized company engravings, seed paper diaries, and upcycled desk planters. Every corporate order includes a customized impact statement detailing kilograms of waste diverted and hours of artisan employment funded, making them ideal for ESG audits, annual general meetings, and employee onboarding kits.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Individual Product Customization Details Dialog Panel */}
       <AnimatePresence>
         {selectedProduct && (
@@ -416,9 +445,10 @@ export default function ProductsView({
                   <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-[#F3EDE3] border border-[#E8E2D9]">
                     <img
                       src={selectedProduct.image}
-                      alt={selectedProduct.name}
+                      alt={selectedProduct.imageAlt || selectedProduct.name}
+                      loading="eager"
+                      decoding="async"
                       className="h-full w-full object-cover"
-                      referrerPolicy="no-referrer"
                     />
                     <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded text-[10px] font-mono text-earth-dark border border-[#E8E2D9]">
                       Salvage Base: {selectedProduct.originalMaterial.split('&')[0]}
@@ -450,7 +480,7 @@ export default function ProductsView({
                       {selectedProduct.name}
                     </h3>
                     <div className="font-mono text-lg font-bold text-earth-dark mt-1 tabular-nums">
-                      ${selectedProduct.price}
+                      ₹{selectedProduct.price.toLocaleString('en-IN')}
                     </div>
                     
                     <p className="text-xs text-earth-slate mt-2 leading-relaxed">

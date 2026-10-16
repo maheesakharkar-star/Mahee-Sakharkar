@@ -545,6 +545,33 @@ export default function GetInvolvedView() {
         </div>
       </section>
 
+      {/* AEO Community & Career Query Section */}
+      <section id="getinvolved-aeo-knowledge" className="rounded-3xl border border-[#CC7722]/20 bg-white p-6 sm:p-10 shadow-sm space-y-6">
+        <div className="flex items-center gap-2 text-xs font-semibold text-ochre uppercase tracking-wider">
+          <HelpCircle className="h-4 w-4" />
+          <span>AEO Community Participation & Internship Answers</span>
+        </div>
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <h2 className="font-display text-xl sm:text-2xl font-bold text-earth-dark tracking-tight leading-snug">
+              How Can Students and Professionals Apply for Sustainability Internships?
+            </h2>
+            <p className="text-sm text-earth-slate leading-relaxed font-sans">
+              Students and young professionals can submit applications for 8-to-12-week internships in Sustainable Product Design, Circular Supply Chains, and Community Outreach directly through our online Get Involved portal. Interns receive mentorship from experienced artisans, a monthly certificate of completion, and hands-on material prototyping experience.
+            </p>
+          </div>
+
+          <div className="space-y-2 pt-4 border-t border-[#E8E2D9]">
+            <h2 className="font-display text-xl sm:text-2xl font-bold text-earth-dark tracking-tight leading-snug">
+              How Can Volunteers Participate in Community Waste Sorting Drives?
+            </h2>
+            <p className="text-sm text-earth-slate leading-relaxed font-sans">
+              Volunteers can register for weekend community collection drives, fabric sorting bees, and educational eco workshops hosted at our urban recycling hubs. Registrations open bi-weekly with zero participation fee, providing safety gloves, training, and refreshments for all participants.
+            </p>
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 }

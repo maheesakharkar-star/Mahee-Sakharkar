@@ -5,11 +5,13 @@
 
 export interface Product {
   id: string;
+  slug?: string;
   name: string;
   category: 'decor' | 'corporate' | 'custom' | 'festival';
   description: string;
   price: number;
   image: string;
+  imageAlt: string;
   originalMaterial: string; // E.g., "Discarded Glass Bottles", "Upcycled Saree fabric"
   artisanGroup: string; // E.g., "Marginalized Women of West Bengal", "Traditional Weavers of Varanasi"
   wasteDivertedKg: number;
@@ -19,6 +21,7 @@ export interface Product {
 
 export interface Workshop {
   id: string;
+  slug?: string;
   title: string;
   description: string;
   duration: string;
@@ -30,23 +33,32 @@ export interface Workshop {
   maxSeats: number;
   seatsBooked: number;
   image: string;
+  imageAlt: string;
 }
 
 export interface Tour {
   id: string;
+  slug?: string;
   title: string;
   duration: string;
   price: number;
   date: string;
   location: string;
   image: string;
+  imageAlt: string;
   description: string;
   itinerary: string[];
   highlights: string[];
 }
 
+export interface AeoFaqItem {
+  question: string;
+  answer: string;
+}
+
 export interface BlogPost {
   id: string;
+  slug: string;
   title: string;
   category: 'tips' | 'diy' | 'impact';
   summary: string;
@@ -56,7 +68,23 @@ export interface BlogPost {
   readTime: string;
   likes: number;
   image: string;
+  imageAlt: string;
+  mainKeyword: string;
+  relatedKeywords: [string, string];
+  aeoQuestions: AeoFaqItem[];
   comments: Comment[];
+}
+
+export interface PageSeoInfo {
+  path: string;
+  pageTitle: string; // 30-60 characters
+  metaDescription: string; // 120-160 characters
+  mainKeyword: string;
+  relatedKeywords: [string, string];
+  canonicalUrl: string;
+  ogType: 'website' | 'article' | 'product';
+  schemaType: 'WebSite' | 'CollectionPage' | 'Article' | 'Event' | 'AboutPage' | 'ContactPage';
+  aeoQuestions?: AeoFaqItem[];
 }
 
 export interface Comment {

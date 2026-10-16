@@ -206,7 +206,7 @@ export default function CartDrawer({
                                       {item.product.name}
                                     </span>
                                     <span className="block font-mono text-xs font-bold text-[#2E7D32] whitespace-nowrap">
-                                      ${item.product.price * item.quantity}
+                                      ₹{(item.product.price * item.quantity).toLocaleString('en-IN')}
                                     </span>
                                   </div>
 
@@ -367,7 +367,7 @@ export default function CartDrawer({
 
                     <div className="flex justify-between border-t border-[#E8E2D9] pt-2 font-display text-sm font-bold text-earth-dark">
                       <span>Invoiced Amount:</span>
-                      <span className="font-mono text-forest font-extrabold text-base">${subtotal}</span>
+                      <span className="font-mono text-forest font-extrabold text-base">₹{subtotal.toLocaleString('en-IN')}</span>
                     </div>
                   </div>
 

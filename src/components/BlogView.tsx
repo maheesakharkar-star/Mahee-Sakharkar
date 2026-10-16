@@ -3,15 +3,34 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect, FormEvent, MouseEvent } from 'react';
+import { useState, useEffect, FormEvent, MouseEvent, ReactNode } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Eye, Heart, MessageSquare, Calendar, User, Clock, ArrowLeft, ArrowUpRight, Sparkles, Send, Info, CheckCircle } from 'lucide-react';
+import { 
+  Heart, 
+  MessageSquare, 
+  Calendar, 
+  Clock, 
+  ArrowLeft, 
+  Sparkles, 
+  Send, 
+  CheckCircle,
+  Key,
+  HelpCircle,
+  ChevronRight,
+  Share2
+} from 'lucide-react';
 import { BlogPost, Comment } from '../types';
 import { blogPostsData } from '../data';
+import { updatePageSeo } from '../utils/seo';
 
-export default function BlogView() {
+interface BlogViewProps {
+  initialArticleSlug?: string | null;
+  navigate: (path: string) => void;
+}
+
+export default function BlogView({ initialArticleSlug, navigate }: BlogViewProps) {
   const [activeBlogCategory, setActiveBlogCategory] = useState<'all' | 'tips' | 'diy' | 'impact'>('all');
-  const [blogs, setBlogs] = useState<BlogPost[]>([]);
+  const [blogs, setBlogs] = useState<BlogPost[]>(blogPostsData);
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
 
   // New Comment state
@@ -26,24 +45,54 @@ export default function BlogView() {
   const [tipUploader, setTipUploader] = useState('');
   const [submitTipSuccess, setSubmitTipSuccess] = useState(false);
 
-  // Persist likes and new blogs locally
+  // Sync blogs and URL slug
   useEffect(() => {
     const savedBlogs = localStorage.getItem('second_story_blogs');
+    let loadedBlogs = blogPostsData;
     if (savedBlogs) {
-      setBlogs(JSON.parse(savedBlogs));
-    } else {
-      setBlogs(blogPostsData);
-      localStorage.setItem('second_story_blogs', JSON.stringify(blogPostsData));
+      try {
+        loadedBlogs = JSON.parse(savedBlogs);
+      } catch (err) {
+        console.error('Error parsing blogs storage:', err);
+      }
     }
-  }, []);
+    setBlogs(loadedBlogs);
+
+    if (initialArticleSlug) {
+      const found = loadedBlogs.find(
+        (b) => b.slug === initialArticleSlug || b.id === initialArticleSlug
+      );
+      if (found) {
+        setSelectedPost(found);
+        updatePageSeo(`/blog/${found.slug}`);
+      }
+    } else {
+      setSelectedPost(null);
+      updatePageSeo('/blog');
+    }
+  }, [initialArticleSlug]);
+
+  const handleSelectArticle = (post: BlogPost) => {
+    setSelectedPost(post);
+    navigate(`/blog/${post.slug}`);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleBackToCatalog = () => {
+    setSelectedPost(null);
+    navigate('/blog');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const handleCategoryChange = (cat: 'all' | 'tips' | 'diy' | 'impact') => {
     setActiveBlogCategory(cat);
-    setSelectedPost(null);
+    if (selectedPost) {
+      handleBackToCatalog();
+    }
   };
 
   const handleLike = (postId: string, e: MouseEvent) => {
-    e.stopPropagation(); // Avoid triggering full screen expand
+    e.stopPropagation();
     const updated = blogs.map((p) => {
       if (p.id === postId) {
         return { ...p, likes: p.likes + 1 };
@@ -114,6 +163,76 @@ export default function BlogView() {
     setTimeout(() => setSubmitTipSuccess(false), 5000);
   };
 
+  // Helper to render markdown content with semantic <h2> for AEO
+  const renderFormattedArticle = (content: string) => {
+    const lines = content.split('\n');
+    const elements: ReactNode[] = [];
+    let currentParagraph: string[] = [];
+
+    const flushParagraph = (key: string) => {
+      if (currentParagraph.length > 0) {
+        const text = currentParagraph.join(' ').trim();
+        if (text) {
+          elements.push(
+            <p key={key} className="text-sm sm:text-base text-earth-dark/90 leading-relaxed font-sans mb-4">
+              {text}
+            </p>
+          );
+        }
+        currentParagraph = [];
+      }
+    };
+
+    lines.forEach((line, index) => {
+      const trimmed = line.trim();
+      if (trimmed.startsWith('## ')) {
+        flushParagraph(`p-before-h2-${index}`);
+        const h2Text = trimmed.replace('## ', '');
+        elements.push(
+          <div key={`h2-block-${index}`} className="pt-6 pb-2 border-b border-[#E8E2D9]/70 mb-3">
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-forest bg-forest/10 px-2.5 py-0.5 rounded-md mb-2">
+              <HelpCircle className="h-3 w-3" />
+              <span>AEO Answer Heading</span>
+            </span>
+            <h2 className="font-display text-xl sm:text-2xl font-bold text-earth-dark tracking-tight leading-snug">
+              {h2Text}
+            </h2>
+          </div>
+        );
+      } else if (trimmed.startsWith('### ')) {
+        flushParagraph(`p-before-h3-${index}`);
+        const h3Text = trimmed.replace('### ', '');
+        elements.push(
+          <h3 key={`h3-${index}`} className="font-display text-base sm:text-lg font-bold text-earth-dark mt-5 mb-2">
+            {h3Text}
+          </h3>
+        );
+      } else if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+        flushParagraph(`p-before-li-${index}`);
+        elements.push(
+          <li key={`li-${index}`} className="text-sm text-earth-slate ml-6 list-disc mb-1.5 leading-relaxed">
+            {trimmed.replace(/^[-*]\s+/, '')}
+          </li>
+        );
+      } else if (/^\d+\.\s/.test(trimmed)) {
+        flushParagraph(`p-before-num-${index}`);
+        const itemText = trimmed.replace(/^\d+\.\s+/, '');
+        elements.push(
+          <li key={`num-${index}`} className="text-sm text-earth-slate ml-6 list-decimal mb-2 leading-relaxed">
+            {itemText}
+          </li>
+        );
+      } else if (trimmed === '') {
+        flushParagraph(`p-empty-${index}`);
+      } else {
+        currentParagraph.push(trimmed);
+      }
+    });
+
+    flushParagraph('p-final');
+    return elements;
+  };
+
   // Filter blog listing
   const filteredBlogs = blogs.filter((post) => {
     if (activeBlogCategory === 'all') return true;
@@ -124,15 +243,15 @@ export default function BlogView() {
     <div className="space-y-12 pb-16">
       
       {/* Intro Header */}
-      <section id="blog-header" className="text-center max-w-2xl mx-auto space-y-4">
+      <section id="blog-header" className="text-center max-w-3xl mx-auto space-y-4">
         <span className="font-sans text-xs font-bold text-forest bg-forest/10 px-4 py-1.5 rounded-full uppercase tracking-wider">
-          The Second Story Journal
+          The Second Story Journal · Editorial & AEO Resource
         </span>
-        <h2 className="font-display text-4xl font-extrabold text-[#1F1916] tracking-tight">
-          Sustainability, DIY & Stories
-        </h2>
-        <p className="font-sans text-sm text-earth-slate">
-          Tips from practitioners, guides explaining home upcycling, and detailed reports exploring how single-mothers weave their lives back to self-sufficiency.
+        <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-[#1F1916] tracking-tight">
+          Sustainable Living, DIY Guides & Impact Stories
+        </h1>
+        <p className="font-sans text-sm text-earth-slate leading-relaxed">
+          Explore structured zero-waste techniques, beginner-friendly upcycling crafts, and inspiring stories of marginalized women reclaiming self-reliance through the circular economy.
         </p>
 
         {/* Categories Tab list buttons */}
@@ -176,18 +295,19 @@ export default function BlogView() {
                 className="grid grid-cols-1 md:grid-cols-2 gap-8"
               >
                 {filteredBlogs.map((post) => (
-                  <div
+                  <article
                     key={post.id}
-                    onClick={() => setSelectedPost(post)}
-                    className="group cursor-pointer rounded-2xl border border-[#E8E2D9] bg-white overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col justify-between h-full hover:border-[#CC7722]/20"
+                    className="group rounded-2xl border border-[#E8E2D9] bg-white overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col justify-between h-full hover:border-[#CC7722]/30"
                   >
                     <div>
+                      {/* Image Thumbnail with Small Size & Alt Text */}
                       <div className="relative aspect-video w-full bg-zinc-100 overflow-hidden">
                         <img
                           src={post.image}
-                          alt={post.title}
+                          alt={post.imageAlt || post.title}
+                          loading="lazy"
+                          decoding="async"
                           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-102"
-                          referrerPolicy="no-referrer"
                         />
                         <span className="absolute top-3 left-3 rounded-full bg-[#1F1916]/80 text-[#FCFAF7] backdrop-blur-sm px-2.5 py-0.5 text-[9px] font-mono uppercase tracking-wider">
                           {post.category === 'tips' ? 'Eco-Tips' : post.category === 'diy' ? 'DIY Guide' : 'Social Impact'}
@@ -207,56 +327,121 @@ export default function BlogView() {
                           </span>
                         </div>
 
-                        <h3 className="font-display font-bold text-base sm:text-lg text-earth-dark group-hover:text-[#CC7722] transition-colors leading-snug">
-                          {post.title}
-                        </h3>
+                        {/* Title with Anchor Link */}
+                        <h2 className="font-display font-bold text-base sm:text-lg text-earth-dark group-hover:text-[#CC7722] transition-colors leading-snug">
+                          <a
+                            href={`/blog/${post.slug}`}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleSelectArticle(post);
+                            }}
+                            className="hover:underline"
+                            title={`Read complete article: ${post.title}`}
+                          >
+                            {post.title}
+                          </a>
+                        </h2>
 
                         <p className="font-sans text-xs text-earth-slate line-clamp-3 leading-relaxed">
                           {post.summary}
                         </p>
+
+                        {/* SEO Keyword tags indicator */}
+                        <div className="pt-2 flex flex-wrap gap-1.5 text-[10px] font-mono text-earth-slate/80">
+                          <span className="bg-[#FCFAF7] border border-[#E8E2D9] px-2 py-0.5 rounded">
+                            #{post.mainKeyword.replace(/\s+/g, '-')}
+                          </span>
+                        </div>
                       </div>
                     </div>
 
                     <div className="p-6 pt-0 border-t border-[#F2ECE4] mt-2 flex items-center justify-between text-xs font-semibold text-earth-slate">
-                      <span className="italic text-earth-dark font-medium">By: {post.author.split(' ')[0]}</span>
+                      <a
+                        href={`/blog/${post.slug}`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleSelectArticle(post);
+                        }}
+                        className="text-forest hover:text-ochre font-bold flex items-center gap-1 underline"
+                        title={`Read ${post.title}`}
+                      >
+                        <span>Read Full Article</span>
+                        <ChevronRight className="h-3.5 w-3.5" />
+                      </a>
+
                       <div className="flex items-center gap-3 pt-3">
                         <button
                           type="button"
                           onClick={(e) => handleLike(post.id, e)}
-                          className="flex items-center gap-1 group-h/btn text-ochre hover:text-red-500 transition-colors"
+                          className="flex items-center gap-1 text-ochre hover:text-red-500 transition-colors"
+                          aria-label={`Like ${post.title}`}
                         >
                           <Heart className="h-4 w-4 fill-current text-ochre tracking-wider hover:scale-110" />
                           <span>{post.likes}</span>
                         </button>
-                        <span className="flex items-center gap-1">
+                        <span className="flex items-center gap-1 text-earth-slate">
                           <MessageSquare className="h-4 w-4" />
                           <span>{post.comments ? post.comments.length : 0}</span>
                         </span>
                       </div>
                     </div>
-                  </div>
+                  </article>
                 ))}
               </motion.div>
 
             ) : (
               
-              /* EXPANDED DETAILED JOURNAL VIEW */
+              /* EXPANDED DETAILED JOURNAL VIEW WITH AEO HEADINGS AND UNIQUE URL */
               <motion.article 
                 key="detail-view"
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                className="bg-white border border-[#E8E2D9] rounded-3xl p-6 sm:p-10 space-y-6 shadow-sm"
+                className="bg-white border border-[#E8E2D9] rounded-3xl p-6 sm:p-10 space-y-8 shadow-sm"
               >
-                <button
-                  onClick={() => setSelectedPost(null)}
-                  className="inline-flex items-center gap-1 text-xs font-bold text-forest hover:text-ochre mb-2 underline transition-all cursor-pointer"
-                >
-                  <ArrowLeft className="h-3.5 w-3.5" />
-                  <span>Back to Journal Catalog</span>
-                </button>
+                {/* Semantic Breadcrumbs with Anchor Texts */}
+                <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs font-medium text-earth-slate">
+                  <a
+                    href="/"
+                    onClick={(e) => { e.preventDefault(); navigate('/'); }}
+                    className="hover:text-forest underline"
+                    title="Return to The Second Story Home"
+                  >
+                    Home
+                  </a>
+                  <ChevronRight className="h-3 w-3" />
+                  <a
+                    href="/blog"
+                    onClick={(e) => { e.preventDefault(); handleBackToCatalog(); }}
+                    className="hover:text-forest underline"
+                    title="Browse all journal articles"
+                  >
+                    The Second Story Journal
+                  </a>
+                  <ChevronRight className="h-3 w-3" />
+                  <span className="text-earth-dark font-semibold truncate max-w-xs">{selectedPost.title}</span>
+                </nav>
 
-                {/* Banner elements */}
+                <div className="flex justify-between items-center">
+                  <a
+                    href="/blog"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleBackToCatalog();
+                    }}
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-forest hover:text-ochre underline transition-all"
+                    title="Return to journal catalog"
+                  >
+                    <ArrowLeft className="h-3.5 w-3.5" />
+                    <span>Back to Journal Catalog</span>
+                  </a>
+
+                  <span className="text-xs font-mono text-earth-slate bg-[#FCFAF7] border border-[#E8E2D9] px-2.5 py-1 rounded">
+                    URL: /blog/{selectedPost.slug}
+                  </span>
+                </div>
+
+                {/* Banner Header */}
                 <div className="space-y-4">
                   <div className="flex flex-wrap items-center gap-3 font-mono text-xs text-earth-slate">
                     <span className="bg-[#FCFAF7] border border-[#E8E2D9] px-2.5 py-0.5 rounded text-ochre font-extrabold uppercase">
@@ -274,7 +459,7 @@ export default function BlogView() {
                     </span>
                   </div>
 
-                  <h1 className="font-display font-extrabold text-2xl sm:text-3xl text-earth-dark leading-tight">
+                  <h1 className="font-display font-extrabold text-2xl sm:text-4xl text-earth-dark leading-tight [text-wrap:balance]">
                     {selectedPost.title}
                   </h1>
 
@@ -282,24 +467,65 @@ export default function BlogView() {
                     <div className="h-7 w-7 rounded-full bg-forest text-white font-display font-bold flex items-center justify-center text-[10px]">
                       {selectedPost.author.charAt(0)}
                     </div>
-                    <span>Published under: <strong>{selectedPost.author}</strong></span>
+                    <span>Published by: <strong className="text-earth-dark">{selectedPost.author}</strong></span>
                   </div>
                 </div>
 
-                {/* Big Image banner */}
-                <div className="relative aspect-video rounded-2xl overflow-hidden bg-zinc-100">
+                {/* Main and Related Keywords Banner for AI Studio & Crawlers */}
+                <div className="rounded-2xl border border-forest/20 bg-forest/5 p-4 sm:p-5 space-y-2">
+                  <div className="flex items-center gap-2 text-xs font-bold text-forest uppercase tracking-wider">
+                    <Key className="h-4 w-4" />
+                    <span>Target Search & AEO Keywords</span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs pt-1">
+                    <div className="bg-white p-2.5 rounded-xl border border-forest/20">
+                      <span className="block text-[10px] font-mono text-earth-slate uppercase">Main Keyword</span>
+                      <strong className="text-earth-dark text-xs">{selectedPost.mainKeyword}</strong>
+                    </div>
+                    <div className="bg-white p-2.5 rounded-xl border border-forest/20">
+                      <span className="block text-[10px] font-mono text-earth-slate uppercase">Related Keyword 1</span>
+                      <span className="text-earth-dark font-medium text-xs">{selectedPost.relatedKeywords[0]}</span>
+                    </div>
+                    <div className="bg-white p-2.5 rounded-xl border border-forest/20">
+                      <span className="block text-[10px] font-mono text-earth-slate uppercase">Related Keyword 2</span>
+                      <span className="text-earth-dark font-medium text-xs">{selectedPost.relatedKeywords[1]}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Big Image banner with Small Size & Alt Text */}
+                <div className="relative aspect-video rounded-2xl overflow-hidden bg-zinc-100 border border-[#E8E2D9]">
                   <img
                     src={selectedPost.image}
-                    alt={selectedPost.title}
+                    alt={selectedPost.imageAlt || selectedPost.title}
+                    loading="eager"
+                    decoding="async"
                     className="h-full w-full object-cover"
-                    referrerPolicy="no-referrer"
                   />
                 </div>
 
-                {/* Main Content formatting text */}
-                <div id="blog-rendered-content" className="font-sans text-xs sm:text-sm text-earth-dark/95 leading-relaxed whitespace-pre-line space-y-4">
-                  {selectedPost.content}
+                {/* Main Content Rendered with Genuine Semantic <h2> for AEO */}
+                <div id="blog-rendered-content" className="space-y-4">
+                  {renderFormattedArticle(selectedPost.content)}
                 </div>
+
+                {/* AEO Dedicated Q&A Box for Search Answer Engines */}
+                {selectedPost.aeoQuestions && selectedPost.aeoQuestions.length > 0 && (
+                  <div className="rounded-2xl border border-ochre/30 bg-[#FFFDF8] p-6 space-y-4">
+                    <div className="flex items-center gap-2 text-xs font-bold text-ochre uppercase tracking-wider">
+                      <HelpCircle className="h-4 w-4" />
+                      <span>Answer Engine Optimization (AEO) Key Takeaways</span>
+                    </div>
+                    <div className="space-y-4">
+                      {selectedPost.aeoQuestions.map((qa, idx) => (
+                        <div key={idx} className="border-l-2 border-ochre pl-4 space-y-1">
+                          <h3 className="text-sm font-bold text-earth-dark">Q: {qa.question}</h3>
+                          <p className="text-xs text-earth-slate leading-relaxed"><strong>A:</strong> {qa.answer}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Action Liker button */}
                 <div className="flex justify-between items-center bg-[#FCFAF7] border border-[#E8E2D9] p-4 rounded-2xl">
@@ -309,7 +535,7 @@ export default function BlogView() {
                     className="flex items-center gap-2 px-4.5 py-2 bg-ochre hover:bg-ochre/90 text-white rounded-xl text-xs font-semibold shadow-md shadow-ochre/10 transition-all active:scale-[0.98]"
                   >
                     <Heart className="h-4 w-4 fill-white" />
-                    <span>Enjoy of this ({selectedPost.likes} Likes)</span>
+                    <span>Support Guide ({selectedPost.likes} Likes)</span>
                   </button>
                 </div>
 
@@ -445,7 +671,7 @@ export default function BlogView() {
                 >
                   <option value="diy">DIY Step-by-Step Projects</option>
                   <option value="tips">Household Sustainability Tips</option>
-                  <option value="story">My Sustainable Upcycle Experience</option>
+                  <option value="impact">My Sustainable Upcycle Experience</option>
                 </select>
               </div>
 
@@ -477,7 +703,7 @@ export default function BlogView() {
                     className="flex items-center gap-2 p-2.5 bg-green-50 text-forest border border-forest/20 rounded-xl"
                   >
                     <CheckCircle className="h-4 w-4 text-[#CC7722]" />
-                    <span className="font-semibold text-[10px]">DIY Suggestion Submited! Our design team will inspect the details and mail you our premium circular handbook.</span>
+                    <span className="font-semibold text-[10px]">DIY Suggestion Submitted! Our design team will inspect the details and mail you our premium circular handbook.</span>
                   </motion.div>
                 )}
               </AnimatePresence>

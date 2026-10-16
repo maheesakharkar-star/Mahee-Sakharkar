@@ -7,10 +7,11 @@ import { useState, FormEvent } from 'react';
 import { Leaf, Mail, Phone, MapPin, Send, Instagram, Facebook, ArrowUp, Sparkles } from 'lucide-react';
 
 interface FooterProps {
-  setActiveTab: (tab: string) => void;
+  setActiveTab?: (tab: string) => void;
+  navigate: (path: string) => void;
 }
 
-export default function Footer({ setActiveTab }: FooterProps) {
+export default function Footer({ navigate }: FooterProps) {
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
 
@@ -23,8 +24,8 @@ export default function Footer({ setActiveTab }: FooterProps) {
     }
   };
 
-  const handleNavigation = (tabId: string) => {
-    setActiveTab(tabId);
+  const handleLinkClick = (url: string) => {
+    navigate(url);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -57,14 +58,19 @@ export default function Footer({ setActiveTab }: FooterProps) {
           
           {/* Brand Info */}
           <div className="space-y-4 lg:col-span-4" id="footer-brand-section">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-forest text-white">
+            <a 
+              href="/"
+              onClick={(e) => { e.preventDefault(); handleLinkClick('/'); }}
+              className="flex items-center gap-3 group"
+              title="Return to The Second Story Home"
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-forest text-white transition-transform group-hover:scale-105">
                 <Leaf className="h-5 w-5" />
               </div>
               <span className="font-display text-xl sm:text-2xl font-black tracking-tight text-white uppercase">
                 The Second Story.
               </span>
-            </div>
+            </a>
             <p className="max-w-md font-sans text-sm leading-relaxed text-[#BDB5AC]">
               To transform discarded materials into meaningful, handcrafted products while creating sustainable livelihoods for women, artisans, and marginalized communities through creativity and conscious consumption.
             </p>
@@ -74,7 +80,8 @@ export default function Footer({ setActiveTab }: FooterProps) {
                 target="_blank" 
                 rel="noreferrer"
                 className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#312822] text-[#BDB5AC] transition-all hover:bg-forest hover:text-white"
-                aria-label="Instagram Profile"
+                aria-label="Visit The Second Story Instagram Profile"
+                title="The Second Story on Instagram"
               >
                 <Instagram className="h-4.5 w-4.5" />
               </a>
@@ -83,14 +90,15 @@ export default function Footer({ setActiveTab }: FooterProps) {
                 target="_blank" 
                 rel="noreferrer"
                 className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#312822] text-[#BDB5AC] transition-all hover:bg-forest hover:text-white"
-                aria-label="Facebook Page"
+                aria-label="Visit The Second Story Facebook Page"
+                title="The Second Story on Facebook"
               >
                 <Facebook className="h-4.5 w-4.5" />
               </a>
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Quick Links with Anchor Text */}
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 sm:gap-12 lg:col-span-5" id="footer-links-section">
             <div>
               <h3 className="font-display text-sm font-semibold tracking-wider text-white uppercase">
@@ -98,36 +106,54 @@ export default function Footer({ setActiveTab }: FooterProps) {
               </h3>
               <ul className="mt-4 space-y-2.5 text-sm">
                 <li>
-                  <button 
-                    onClick={() => handleNavigation('home')}
-                    className="text-[#BDB5AC] transition-colors hover:text-ochre text-left"
+                  <a 
+                    href="/"
+                    onClick={(e) => { e.preventDefault(); handleLinkClick('/'); }}
+                    className="text-[#BDB5AC] transition-colors hover:text-ochre text-left block"
+                    title="Introduction and home view"
                   >
                     Introduction & Home
-                  </button>
+                  </a>
                 </li>
                 <li>
-                  <button 
-                    onClick={() => handleNavigation('products')}
-                    className="text-[#BDB5AC] transition-colors hover:text-ochre text-left"
+                  <a 
+                    href="/products"
+                    onClick={(e) => { e.preventDefault(); handleLinkClick('/products'); }}
+                    className="text-[#BDB5AC] transition-colors hover:text-ochre text-left block"
+                    title="Browse sustainable upcycled products"
                   >
                     Sustainable Products
-                  </button>
+                  </a>
                 </li>
                 <li>
-                  <button 
-                    onClick={() => handleNavigation('activities')}
-                    className="text-[#BDB5AC] transition-colors hover:text-ochre text-left"
+                  <a 
+                    href="/activities"
+                    onClick={(e) => { e.preventDefault(); handleLinkClick('/activities'); }}
+                    className="text-[#BDB5AC] transition-colors hover:text-ochre text-left block"
+                    title="View creative workshops"
                   >
                     Creative Workshops
-                  </button>
+                  </a>
                 </li>
                 <li>
-                  <button 
-                    onClick={() => handleNavigation('activities')}
-                    className="text-[#BDB5AC] transition-colors hover:text-ochre text-left"
+                  <a 
+                    href="/activities"
+                    onClick={(e) => { e.preventDefault(); handleLinkClick('/activities'); }}
+                    className="text-[#BDB5AC] transition-colors hover:text-ochre text-left block"
+                    title="View sustainability eco tours"
                   >
                     Sustainability Eco Tours
-                  </button>
+                  </a>
+                </li>
+                <li>
+                  <a 
+                    href="/impact"
+                    onClick={(e) => { e.preventDefault(); handleLinkClick('/impact'); }}
+                    className="text-[#BDB5AC] transition-colors hover:text-ochre text-left block"
+                    title="View environmental and community social impact"
+                  >
+                    Social Impact Metrics
+                  </a>
                 </li>
               </ul>
             </div>
@@ -138,36 +164,44 @@ export default function Footer({ setActiveTab }: FooterProps) {
               </h3>
               <ul className="mt-4 space-y-2.5 text-sm">
                 <li>
-                  <button 
-                    onClick={() => handleNavigation('find-us')}
-                    className="text-[#BDB5AC] transition-colors hover:text-ochre text-left"
+                  <a 
+                    href="/find-us"
+                    onClick={(e) => { e.preventDefault(); handleLinkClick('/find-us'); }}
+                    className="text-[#BDB5AC] transition-colors hover:text-ochre text-left block"
+                    title="Contact The Second Story cooperative team"
                   >
                     Contact Team
-                  </button>
+                  </a>
                 </li>
                 <li>
-                  <button 
-                    onClick={() => handleNavigation('find-us')}
-                    className="text-[#BDB5AC] transition-colors hover:text-ochre text-left"
+                  <a 
+                    href="/find-us"
+                    onClick={(e) => { e.preventDefault(); handleLinkClick('/find-us'); }}
+                    className="text-[#BDB5AC] transition-colors hover:text-ochre text-left block"
+                    title="Apply for circular design internships"
                   >
                     Apply for Internships
-                  </button>
+                  </a>
                 </li>
                 <li>
-                  <button 
-                    onClick={() => handleNavigation('find-us')}
-                    className="text-[#BDB5AC] transition-colors hover:text-ochre text-left"
+                  <a 
+                    href="/find-us"
+                    onClick={(e) => { e.preventDefault(); handleLinkClick('/find-us'); }}
+                    className="text-[#BDB5AC] transition-colors hover:text-ochre text-left block"
+                    title="Participate in volunteer waste drives"
                   >
                     Volunteer Projects
-                  </button>
+                  </a>
                 </li>
                 <li>
-                  <button 
-                    onClick={() => handleNavigation('blog')}
-                    className="text-[#BDB5AC] transition-colors hover:text-ochre text-left"
+                  <a 
+                    href="/blog"
+                    onClick={(e) => { e.preventDefault(); handleLinkClick('/blog'); }}
+                    className="text-[#BDB5AC] transition-colors hover:text-ochre text-left block"
+                    title="Read DIY upcycling guides and journal"
                   >
-                    Read DIY Blog
-                  </button>
+                    Read DIY & Impact Blog
+                  </a>
                 </li>
               </ul>
             </div>
@@ -215,7 +249,7 @@ export default function Footer({ setActiveTab }: FooterProps) {
               <button
                 type="submit"
                 className="absolute right-1.5 top-1.5 flex h-9 w-9 items-center justify-center rounded-lg bg-forest text-white transition-all hover:bg-ochre"
-                aria-label="Send Email Subscribe Button"
+                aria-label="Subscribe to Conscious Newsletter"
               >
                 <Send className="h-4 w-4" />
               </button>
@@ -241,7 +275,7 @@ export default function Footer({ setActiveTab }: FooterProps) {
             <button 
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               className="flex h-7 w-7 items-center justify-center rounded-full bg-[#29211C] text-[#BDB5AC] transition-all hover:bg-ochre hover:text-white"
-              aria-label="Back to Top"
+              aria-label="Scroll back to top of the page"
             >
               <ArrowUp className="h-3.5 w-3.5" />
             </button>

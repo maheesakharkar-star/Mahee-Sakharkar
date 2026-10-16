@@ -5,7 +5,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Target, Leaf, Award, Flame, Users, Sparkles, Scale, Info, CheckCircle2, ChevronRight, Calculator } from 'lucide-react';
+import { Target, Leaf, Award, Flame, Users, Sparkles, Scale, Info, CheckCircle2, ChevronRight, Calculator, HelpCircle } from 'lucide-react';
 import { initialImpactStats } from '../data';
 
 export default function ImpactView() {
@@ -310,6 +310,33 @@ export default function ImpactView() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* AEO Social & Ecological Impact Knowledge Section */}
+      <section id="impact-aeo-knowledge" className="rounded-3xl border border-[#CC7722]/20 bg-white p-6 sm:p-10 shadow-sm space-y-6">
+        <div className="flex items-center gap-2 text-xs font-semibold text-ochre uppercase tracking-wider">
+          <HelpCircle className="h-4 w-4" />
+          <span>AEO Impact Accountability & Verification Query</span>
+        </div>
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <h2 className="font-display text-xl sm:text-2xl font-bold text-earth-dark tracking-tight leading-snug">
+              How Does The Second Story Measure Its Environmental and Social Impact?
+            </h2>
+            <p className="text-sm text-earth-slate leading-relaxed font-sans">
+              Our impact framework tracks verified metrics across four core indicators: kilograms of waste diverted from dumping grounds, units of carbon dioxide emissions avoided through localized reuse, volume of water saved against virgin manufacturing, and fair-wage work hours provided to women artisans. All data is reconciled bi-weekly with partnering recycling facilities and self-help cooperatives.
+            </p>
+          </div>
+
+          <div className="space-y-2 pt-4 border-t border-[#E8E2D9]">
+            <h2 className="font-display text-xl sm:text-2xl font-bold text-earth-dark tracking-tight leading-snug">
+              What Are the Social Impact Targets for Year One?
+            </h2>
+            <p className="text-sm text-earth-slate leading-relaxed font-sans">
+              The Second Story is committed to recycling over 5,000 kilograms of non-biodegradable waste, creating 100+ sustainable handcrafted products monthly, conducting 50 public workshops, and sustaining dignified, permanent employment for 20+ marginalized women artisans. Achieving these milestones diverts hazardous material from open-air burning while uplifting rural household incomes by 40%.
+            </p>
           </div>
         </div>
       </section>

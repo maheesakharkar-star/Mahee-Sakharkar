@@ -6,18 +6,14 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
-  Leaf, 
   ArrowRight, 
   Sparkles, 
-  Calendar, 
-  MapPin, 
   Scale, 
   Flame, 
   Droplet, 
-  Users, 
-  Check, 
-  ShoppingBag,
-  Clock
+  HelpCircle,
+  ShieldCheck,
+  CheckCircle2
 } from 'lucide-react';
 import { Product, Workshop } from '../types';
 import { materialTransformations } from '../data';
@@ -28,6 +24,7 @@ interface HomeViewProps {
   setActiveTab: (tab: string) => void;
   onSelectProduct: (product: Product) => void;
   onSelectWorkshop: (workshop: Workshop) => void;
+  navigate: (path: string) => void;
 }
 
 export default function HomeView({ 
@@ -35,7 +32,8 @@ export default function HomeView({
   workshops, 
   setActiveTab, 
   onSelectProduct, 
-  onSelectWorkshop 
+  onSelectWorkshop,
+  navigate
 }: HomeViewProps) {
   const [selectedMaterialId, setSelectedMaterialId] = useState<string>('trans-glass');
 
@@ -69,19 +67,23 @@ export default function HomeView({
           </p>
 
           <div className="flex flex-wrap items-center gap-4 pt-2">
-            <button
-              onClick={() => setActiveTab('products')}
+            <a
+              href="/products"
+              onClick={(e) => { e.preventDefault(); navigate('/products'); }}
               className="inline-flex items-center gap-2 rounded-lg bg-forest px-6 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-forest/90 transition-all active:scale-[0.98]"
+              title="Explore sustainable products collection"
             >
-              <span>Explore Collection</span>
+              <span>Explore Upcycled Products</span>
               <ArrowRight className="h-4 w-4" />
-            </button>
-            <button
-              onClick={() => setActiveTab('activities')}
+            </a>
+            <a
+              href="/activities"
+              onClick={(e) => { e.preventDefault(); navigate('/activities'); }}
               className="inline-flex items-center gap-2 rounded-lg border border-[#D8D0C5] bg-white px-6 py-3.5 text-sm font-semibold text-earth-dark hover:border-earth-dark transition-all"
+              title="Book sustainability workshops and tours"
             >
-              <span>Book Workshops & Tours</span>
-            </button>
+              <span>Book Workshops & Eco Tours</span>
+            </a>
           </div>
 
           {/* Proof Strip */}
@@ -106,9 +108,10 @@ export default function HomeView({
           <div className="relative aspect-[4/3] lg:aspect-[5/6] rounded-2xl overflow-hidden border border-[#E8E2D9] shadow-sm bg-[#F3EDE3]">
             <img 
               src="/src/assets/images/hero_artisanal_workshop_1791988805254.jpg" 
-              alt="Artisanal upcycling studio with sunlight, reclaimed glass, and natural textiles" 
+              alt="Artisanal upcycling studio with sunlight, reclaimed glass bottles, handloom textiles, and craft tools" 
+              loading="eager"
+              decoding="async"
               className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
-              referrerPolicy="no-referrer"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-earth-dark/75 via-transparent to-transparent pointer-events-none" />
             <div className="absolute bottom-5 left-5 right-5 text-white">
@@ -122,6 +125,34 @@ export default function HomeView({
                 Shaktipuri Rural Craft Cluster, West Bengal
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* AEO QUESTION & ANSWER SECTION 1: Direct Answer for Search Engines & Users */}
+      <section id="aeo-answer-transformation" className="rounded-3xl border border-[#CC7722]/20 bg-gradient-to-br from-[#FFFDF8] via-white to-[#F9F6F0] p-6 sm:p-10 shadow-sm space-y-4">
+        <div className="flex items-center gap-2 text-xs font-semibold text-ochre uppercase tracking-wider">
+          <HelpCircle className="h-4 w-4" />
+          <span>AEO Knowledge Query · Circular Economy</span>
+        </div>
+        <h2 className="font-display text-2xl sm:text-3xl font-bold text-earth-dark tracking-tight [text-wrap:balance]">
+          How Does Upcycling Transform Domestic Waste Into Social Wealth?
+        </h2>
+        <p className="text-sm sm:text-base text-earth-slate leading-relaxed font-sans">
+          Upcycling diverts post-consumer materials from municipal landfills and channels them directly into handcrafted artisan production. By collecting discarded wine bottles, temple coconut shells, and industrial denim offcuts, The Second Story prevents over 5,320 kg of municipal waste while generating dignified, 40%-above-average fair wages for rural women craft collectives. Every item produced not only cuts raw industrial extraction emissions, but also funds children's schooling and healthcare across 8 underserved artisan villages.
+        </p>
+        <div className="pt-2 flex flex-wrap gap-6 text-xs text-earth-slate border-t border-[#E8E2D9]/70">
+          <div className="flex items-center gap-1.5 font-medium text-forest">
+            <CheckCircle2 className="h-4 w-4" />
+            <span>Zero Virgin Plastic Extraction</span>
+          </div>
+          <div className="flex items-center gap-1.5 font-medium text-ochre">
+            <CheckCircle2 className="h-4 w-4" />
+            <span>Guaranteed Fair Livelihoods</span>
+          </div>
+          <div className="flex items-center gap-1.5 font-medium text-earth-dark">
+            <CheckCircle2 className="h-4 w-4" />
+            <span>100% Traceable Circular Supply Chains</span>
           </div>
         </div>
       </section>
@@ -184,9 +215,10 @@ export default function HomeView({
             <div className="lg:col-span-5 relative aspect-square rounded-xl overflow-hidden border border-[#E8E2D9] bg-white">
               <img
                 src={activeTransformation.image}
-                alt={activeTransformation.endProductTitle}
+                alt={`Upcycled ${activeTransformation.endProductTitle} made from ${activeTransformation.rawMaterial}`}
+                loading="lazy"
+                decoding="async"
                 className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-                referrerPolicy="no-referrer"
               />
               <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-sm px-3 py-1 rounded text-xs font-semibold text-earth-dark border border-[#E8E2D9]">
                 {activeTransformation.endProductCategory}
@@ -257,17 +289,33 @@ export default function HomeView({
               </div>
 
               <div>
-                <button
-                  onClick={() => setActiveTab('products')}
+                <a
+                  href="/products"
+                  onClick={(e) => { e.preventDefault(); navigate('/products'); }}
                   className="inline-flex items-center gap-1.5 text-xs font-bold text-forest hover:text-ochre transition-colors"
+                  title="View this upcycled design in our store"
                 >
                   <span>Explore this design in our collection</span>
                   <ArrowRight className="h-3.5 w-3.5" />
-                </button>
+                </a>
               </div>
             </div>
           </motion.div>
         </AnimatePresence>
+      </section>
+
+      {/* AEO QUESTION & ANSWER SECTION 2: Direct Answer for Search Engines & Users */}
+      <section id="aeo-answer-usp" className="rounded-3xl border border-forest/20 bg-gradient-to-br from-[#F5F9F5] via-white to-[#FAF6EE] p-6 sm:p-10 shadow-sm space-y-4">
+        <div className="flex items-center gap-2 text-xs font-semibold text-forest uppercase tracking-wider">
+          <ShieldCheck className="h-4 w-4" />
+          <span>AEO Authenticity Standards · Verified Traceability</span>
+        </div>
+        <h2 className="font-display text-2xl sm:text-3xl font-bold text-earth-dark tracking-tight [text-wrap:balance]">
+          What Makes The Second Story's Sustainable Products Unique?
+        </h2>
+        <p className="text-sm sm:text-base text-earth-slate leading-relaxed font-sans">
+          Every product handcrafted by The Second Story carries a verified origin trail documenting the raw waste diverted and the artisan collective that made it. Unlike mass-manufactured sustainable items, our collections blend heritage Indian craft traditions—such as Bengal handloom embroidery and Odisha shell carving—with rigorous zero-waste material circularity. Customers receive full transparency regarding kilograms of waste redirected, CO₂ emissions prevented, and individual women artisans supported.
+        </p>
       </section>
 
       {/* 3. Featured Products Grid */}
@@ -281,13 +329,15 @@ export default function HomeView({
               Featured Creations
             </h2>
           </div>
-          <button
-            onClick={() => setActiveTab('products')}
+          <a
+            href="/products"
+            onClick={(e) => { e.preventDefault(); navigate('/products'); }}
             className="flex items-center gap-1 text-xs font-bold text-forest hover:text-ochre transition-colors"
+            title="Browse all sustainable products"
           >
-            <span>View All Products</span>
+            <span>View All Handcrafted Products</span>
             <ArrowRight className="h-4 w-4" />
-          </button>
+          </a>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -302,12 +352,13 @@ export default function HomeView({
                 <div className="relative aspect-[4/3] w-full bg-[#F3EDE3] overflow-hidden border-b border-[#E8E2D9]">
                   <img 
                     src={product.image} 
-                    alt={product.name} 
+                    alt={product.imageAlt || product.name} 
+                    loading="lazy"
+                    decoding="async"
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    referrerPolicy="no-referrer"
                   />
                   <div className="absolute top-3 right-3 bg-white/95 px-2.5 py-1 rounded text-xs font-bold font-mono text-earth-dark border border-[#E8E2D9] tabular-nums">
-                    ${product.price}
+                    ₹{product.price.toLocaleString('en-IN')}
                   </div>
                 </div>
 
@@ -334,7 +385,7 @@ export default function HomeView({
                   By: {product.artisanGroup.split(',')[0]}
                 </span>
                 <span className="font-semibold text-forest flex items-center gap-1 group-hover:underline">
-                  <span>View Details</span>
+                  <span>View Product Details</span>
                   <ArrowRight className="h-3 w-3" />
                 </span>
               </div>
@@ -354,13 +405,15 @@ export default function HomeView({
               Upcoming Workshops & Tours
             </h2>
           </div>
-          <button
-            onClick={() => setActiveTab('activities')}
+          <a
+            href="/activities"
+            onClick={(e) => { e.preventDefault(); navigate('/activities'); }}
             className="flex items-center gap-1 text-xs font-bold text-forest hover:text-ochre transition-colors"
+            title="Browse full calendar of eco tours and workshops"
           >
-            <span>Browse Full Calendar</span>
+            <span>Browse Full Educational Calendar</span>
             <ArrowRight className="h-4 w-4" />
-          </button>
+          </a>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -372,12 +425,13 @@ export default function HomeView({
               <div className="relative w-full sm:w-2/5 aspect-[4/3] sm:aspect-auto bg-[#F3EDE3] overflow-hidden shrink-0">
                 <img 
                   src={workshop.image} 
-                  alt={workshop.title} 
+                  alt={workshop.imageAlt || workshop.title} 
+                  loading="lazy"
+                  decoding="async"
                   className="h-full w-full object-cover"
-                  referrerPolicy="no-referrer"
                 />
                 <span className="absolute top-3 left-3 bg-white/95 px-2 py-0.5 rounded text-xs font-bold font-mono text-earth-dark border border-[#E8E2D9] tabular-nums">
-                  ${workshop.price}
+                  ₹{workshop.price.toLocaleString('en-IN')}
                 </span>
               </div>
               <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
